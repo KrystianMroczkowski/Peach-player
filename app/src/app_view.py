@@ -7261,7 +7261,8 @@ class Ui_MainWindow:
         self.centralStackedWidget.addWidget(self.centralPageRegisterPage)
         self.centralWidgetLayout.addWidget(self.centralStackedWidget, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
-        self.centralStackedWidget.setCurrentIndex(0)
+
+        self.centralStackedWidget.setCurrentIndex(1)
         self.mainPageStackedWidget.setCurrentIndex(6)
         self.mainPageAuthorPageStackedWidget.setCurrentIndex(0)
         self.mainPageCategoryPageStackedWidget.setCurrentIndex(0)

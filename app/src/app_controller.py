@@ -1,5 +1,14 @@
 from functools import partial
 from PySide6 import QtCore, QtWidgets, QtGui
+from app.src.classes import navbar_frame
+from app_model import *
+import requests
+from tkinter.filedialog import askopenfilename
+import os
+import shutil
+import io
+import zipfile
+
 
 scrollbar_recently_used = False
 
@@ -8,6 +17,9 @@ class Controller:
     def __init__(self, ui):
         self.ui = ui
         self.connect_signals_with_slots()
+        self.user_data = None
+        self.get_user_data()
+        self.log_in_with_token()
 
     def connect_signals_with_slots(self):
         """Connects Ui's widgets with respective slots"""
@@ -24,6 +36,11 @@ class Controller:
         self.ui.leftMenuAuthorsButton.clicked.connect(self.authors_button_slot)
         self.ui.leftMenuAlbumsButton.clicked.connect(self.albums_button_slot)
         self.ui.bottomPlayerQueueButton.clicked.connect(self.queue_button_slot)
+        self.ui.pushButton_3.clicked.connect(self.log_in_with_credentials)
+        self.ui.pushButton_5.clicked.connect(self.continue_as_guest)
+        self.ui.pushButton_50.clicked.connect(self.register)
+        self.ui.pushButton_53.clicked.connect(self.load_register_page)
+        self.ui.fixedNavbar.navbarUsernameButton.clicked.connect(self.log_out)
 
         # Sort buttons' slots
         self.ui.mainPageLikedSongsSortButtonsQButtonGroup.buttonClicked.connect(
@@ -891,3 +908,70 @@ class Controller:
 
     def main_page_stacked_widget_resize_slot(self):
         self.ui.fixedNavbar.setFixedWidth(self.ui.centralPageAppPage.rect().width() - 200)
+
+    def get_user_data(self):
+        user = User.query.first()
+        if user:
+            self.user_data = {"token": user.token.strip(), "hashed_name": user.hashed_name}
+        return False
+
+    def register(self):
+        email = self.ui.lineEdit_3.text()
+        password = self.ui.lineEdit_4.text()
+        username = self.ui.lineEdit_5.text()
+        data = {'email': email, "username": username, "password": password}
+        response = requests.post('http://127.0.0.1:5000/register', data=data).json()
+        if response["error"] == "1":
+            print(response["message"])
+            self.ui.centralStackedWidget.setCurrentIndex(1)
+        else:
+            print(response["message"])
+
+    def load_register_page(self):
+        self.ui.centralStackedWidget.setCurrentIndex(2)
+
+    def log_in_with_credentials(self):
+        email = self.ui.lineEdit.text()
+        password = self.ui.lineEdit_2.text()
+        data = {'email': email, 'password': password}
+        response = requests.post('http://127.0.0.1:5000/login', data=data).json()
+        if response["error"] == "1":
+            token = response["token"]
+            user_hashed_name = response["hashed_name"]
+            self.user_data = {"token": token.strip(), "hashed_name": user_hashed_name}
+            user = User(
+                token=token,
+                hashed_name=user_hashed_name
+            )
+            db.session.add(user)
+            print(response["message"])
+            self.ui.centralStackedWidget.setCurrentIndex(0)
+        else:
+            print(response["message"])
+        db.session.commit()
+
+    def log_in_with_token(self):
+        if self.user_data:
+            response = requests.post('http://127.0.0.1:5000/login_t', data=self.user_data).json()
+            if response["error"] == "1":
+                self.ui.centralStackedWidget.setCurrentIndex(0)
+                print(response["message"])
+            else:
+                User.query.delete()
+                print(response["message"])
+        else:
+            self.ui.centralStackedWidget.setCurrentIndex(1)
+
+    def continue_as_guest(self):
+        self.ui.centralStackedWidget.setCurrentIndex(0)
+
+    def log_out(self):
+        if self.user_data:
+            response = requests.post('http://127.0.0.1:5000/logout', data=self.user_data).json()
+            print(response["message"])
+            User.query.delete()
+            db.session.commit()
+            self.user_data = None
+            self.ui.centralStackedWidget.setCurrentIndex(1)
+        else:
+            self.ui.centralStackedWidget.setCurrentIndex(1)
