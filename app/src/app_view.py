@@ -994,17 +994,17 @@ class Ui_MainWindow:
         self.mainPageCategoriesCategoriesEntriesQGridLayout.setSpacing(24)
         self.mainPageCategoriesCategoriesEntriesQGridLayout.setObjectName("mainPageCategoriesCategoriesEntriesQGridLayout")
 
-        self.frame_140 = CategoryEntry(self.frame_54)
-        self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_140, 1, 2, 1, 1)
-
         spacerItem6 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageCategoriesCategoriesEntriesQGridLayout.addItem(spacerItem6, 2, 0, 1, 1)
 
-        self.frame_142 = CategoryEntry(self.frame_54)
-        self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_142, 0, 0, 1, 1)
-
         spacerItem7 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.mainPageCategoriesCategoriesEntriesQGridLayout.addItem(spacerItem7, 0, 4, 1, 1)
+        """
+        self.frame_140 = CategoryEntry(self.frame_54)
+        self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_140, 1, 2, 1, 1)
+        
+        self.frame_142 = CategoryEntry(self.frame_54)
+        self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_142, 0, 0, 1, 1)
 
         self.frame_144 = CategoryEntry(self.frame_54)
         self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_144, 1, 0, 1, 1)
@@ -1023,7 +1023,7 @@ class Ui_MainWindow:
 
         self.frame_154 = CategoryEntry(self.frame_54)
         self.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(self.frame_154, 0, 1, 1, 1)
-
+        """
         self.verticalLayout_79.addWidget(self.frame_54)
         self.verticalLayout_76.addWidget(self.frame_46)
         self.scrollArea_9.setWidget(self.scrollAreaWidgetContents_9)

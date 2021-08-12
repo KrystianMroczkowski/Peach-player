@@ -3,12 +3,13 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from app.src.classes import navbar_frame
 from app_model import *
 import requests
+from classes.category_entry import CategoryEntry
 from tkinter.filedialog import askopenfilename
 import os
 import shutil
 import io
 import zipfile
-
+from functools import partial
 
 scrollbar_recently_used = False
 
@@ -17,6 +18,7 @@ class Controller:
     def __init__(self, ui):
         self.ui = ui
         self.connect_signals_with_slots()
+        self.category_frames = []
         self.user_data = None
         self.get_user_data()
         self.log_in_with_token()
@@ -41,6 +43,8 @@ class Controller:
         self.ui.pushButton_50.clicked.connect(self.register)
         self.ui.pushButton_53.clicked.connect(self.load_register_page)
         self.ui.fixedNavbar.navbarUsernameButton.clicked.connect(self.log_out)
+        self.ui.categoriesButton.clicked.connect(self.load_categories)
+
 
         # Sort buttons' slots
         self.ui.mainPageLikedSongsSortButtonsQButtonGroup.buttonClicked.connect(
@@ -908,6 +912,41 @@ class Controller:
 
     def main_page_stacked_widget_resize_slot(self):
         self.ui.fixedNavbar.setFixedWidth(self.ui.centralPageAppPage.rect().width() - 200)
+
+    def load_categories(self):
+        music_categories = []
+        row = column = 0
+        category_frames_amount = len(self.category_frames)
+        if category_frames_amount == 0:
+            response = requests.get("http://127.0.0.1:5000/get_music_categories").json()
+            if response["error"] == "1":
+                music_categories = response["data"]
+            else:
+                print(response["message"])
+        else:
+            for i in self.category_frames:
+                music_categories.append(i.category)
+        self.category_frames = []
+        for category in music_categories:
+            if column % 8 == 0:
+                row += 1
+                column = 0
+            self.ui.category_frame = CategoryEntry(self.ui.frame_54, category=category)
+            self.ui.category_frame.clicked.connect(partial(self.load_selected_category_songs, category))
+            self.ui.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(
+                self.ui.category_frame,
+                row, column, 1, 1
+            )
+            self.category_frames.append(self.ui.category_frame)
+            column += 1
+
+    def load_selected_category_songs(self, category):
+        self.ui.mainPageStackedWidget.setCurrentIndex(7)
+        self.ui.mainPageCategoryNameLabel.setText(category)
+
+    def load_songs_by_category(self, category):
+        data = {"category": category}
+        response = requests.post('http://127.0.0.1:5000/get_songs_by_category', data=data).json()
 
     def get_user_data(self):
         user = User.query.first()
