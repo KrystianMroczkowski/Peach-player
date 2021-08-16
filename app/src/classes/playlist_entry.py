@@ -3,8 +3,9 @@ from app.src import resources_peach_player
 
 
 class PlaylistEntry(QtWidgets.QFrame):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, playlist_name=""):
         super().__init__(parent=parent)
+        self.playlist_name = playlist_name
         self.setup_layout()
 
     def setup_layout(self):
@@ -61,7 +62,7 @@ class PlaylistEntry(QtWidgets.QFrame):
         self.verticalLayout_100.setSpacing(0)
         self.verticalLayout_100.setObjectName("verticalLayout_100")
         self.label_36 = QtWidgets.QLabel(self.frame_160)
-        self.label_36.setText("Pellentesque dolor")
+        self.label_36.setText(self.playlist_name)
         self.label_36.setObjectName("label_36")
         self.verticalLayout_100.addWidget(self.label_36)
         self.label_37 = QtWidgets.QLabel(self.frame_160)

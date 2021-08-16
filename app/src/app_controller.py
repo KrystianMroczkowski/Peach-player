@@ -10,6 +10,11 @@ import shutil
 import io
 import zipfile
 from functools import partial
+from classes.song_entry import SongEntry
+from classes.album_entry import AlbumEntry
+from classes.category_entry import CategoryEntry
+from classes.playlist_entry import PlaylistEntry
+
 
 scrollbar_recently_used = False
 
@@ -19,6 +24,9 @@ class Controller:
         self.ui = ui
         self.connect_signals_with_slots()
         self.category_frames = []
+        self.loaded_songs = []
+        self.loaded_albums = []
+        self.loaded_playlists = []
         self.user_data = None
         self.get_user_data()
         self.log_in_with_token()
@@ -44,7 +52,9 @@ class Controller:
         self.ui.pushButton_53.clicked.connect(self.load_register_page)
         self.ui.fixedNavbar.navbarUsernameButton.clicked.connect(self.log_out)
         self.ui.categoriesButton.clicked.connect(self.load_categories)
-
+        self.ui.mainPageCategorySongsButton.clicked.connect(self.change_widget_songs)
+        self.ui.mainPageCategoryAlbumsButton.clicked.connect(self.change_widget_albums)
+        self.ui.mainPageCategoryPlaylistsButton.clicked.connect(self.change_widget_playlists)
 
         # Sort buttons' slots
         self.ui.mainPageLikedSongsSortButtonsQButtonGroup.buttonClicked.connect(
@@ -915,38 +925,87 @@ class Controller:
 
     def load_categories(self):
         music_categories = []
-        row = column = 0
-        category_frames_amount = len(self.category_frames)
-        if category_frames_amount == 0:
-            response = requests.get("http://127.0.0.1:5000/get_music_categories").json()
-            if response["error"] == "1":
-                music_categories = response["data"]
-            else:
-                print(response["message"])
-        else:
-            for i in self.category_frames:
-                music_categories.append(i.category)
         self.category_frames = []
+        row = column = 0
+        music_categories_query = MusicCategories.query.all()
+        for i in music_categories_query:
+            music_categories.append(i.category_name)
         for category in music_categories:
             if column % 8 == 0:
                 row += 1
                 column = 0
-            self.ui.category_frame = CategoryEntry(self.ui.frame_54, category=category)
-            self.ui.category_frame.clicked.connect(partial(self.load_selected_category_songs, category))
+            category_frame = CategoryEntry(self.ui.frame_54, category=category)
+            category_frame.clicked.connect(partial(self.load_selected_category_data, category))
             self.ui.mainPageCategoriesCategoriesEntriesQGridLayout.addWidget(
-                self.ui.category_frame,
+                category_frame,
                 row, column, 1, 1
             )
-            self.category_frames.append(self.ui.category_frame)
+            self.category_frames.append(category_frame)
             column += 1
 
-    def load_selected_category_songs(self, category):
+    def load_selected_category_data(self, category):
         self.ui.mainPageStackedWidget.setCurrentIndex(7)
         self.ui.mainPageCategoryNameLabel.setText(category)
+        music_category = MusicCategories.query.filter_by(category_name=category).first()
+        self.load_songs_data(music_category)
+        self.load_albums_data(music_category)
+        self.load_playlists_data(music_category)
 
-    def load_songs_by_category(self, category):
-        data = {"category": category}
-        response = requests.post('http://127.0.0.1:5000/get_songs_by_category', data=data).json()
+    def load_songs_data(self, music_category):
+        if len(self.loaded_songs) != 0:
+            for i in self.loaded_songs:
+                i.setParent(None)
+            self.loaded_songs = []
+        songs = Songs.query.filter_by(category=music_category)
+        for song in songs:
+            song_frame = SongEntry(
+                song_title=song.title,
+                artist_name=song.author,
+                category_name=song.category.category_name
+            )
+            self.ui.mainPageCategoryPageSongsListQVBoxLayout.addWidget(song_frame)
+            self.loaded_songs.append(song_frame)
+
+    def load_albums_data(self, music_category):
+        if len(self.loaded_albums) != 0:
+            for i in self.loaded_albums:
+                i.setParent(None)
+            self.loaded_albums = []
+        albums = Albums.query.filter_by(category=music_category).all()
+        row = column = 0
+        for album in albums:
+            if column % 8 == 0:
+                row += 1
+                column = 0
+            album_frame = AlbumEntry(album_name=album.album_name)
+            self.ui.mainPageCategoryAlbumsGridQGridLayout.addWidget(album_frame, row, column, 1, 1)
+            self.loaded_albums.append(album_frame)
+            column += 1
+
+    def load_playlists_data(self, music_category):
+        if len(self.loaded_playlists) != 0:
+            for i in self.loaded_playlists:
+                i.setParent(None)
+            self.loaded_playlists = []
+        playlists = Playlist.query.filter_by(category=music_category).all()
+        row = column = 0
+        for playlist in playlists:
+            if column % 8 == 0:
+                row += 1
+                column = 0
+            playlist_frame = PlaylistEntry(self.ui.frame_62, playlist_name=playlist.playlist_name)
+            self.ui.mainPageCategoryPlaylistsGridQGridLayout.addWidget(playlist_frame, row, column, 1, 1)
+            self.loaded_playlists.append(playlist_frame)
+            column += 1
+
+    def change_widget_songs(self):
+        self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(0)
+
+    def change_widget_albums(self):
+        self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(1)
+
+    def change_widget_playlists(self):
+        self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(2)
 
     def get_user_data(self):
         user = User.query.first()
