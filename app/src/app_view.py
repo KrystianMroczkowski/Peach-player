@@ -1669,15 +1669,15 @@ class Ui_MainWindow:
         self.mainPageLikedSongsSongListQVBoxLayout.setSpacing(0)
         self.mainPageLikedSongsSongListQVBoxLayout.setObjectName("mainPageLikedSongsSongListQVBoxLayout")
 
-        self.frame_29 = SongEntry(song_title="Nam tristique", artist_name="Nullam quam", category_name="In ac",
-                                  date_added="24 Dec 2020", song_length="5 : 30")
-        self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_29)
+        # self.frame_29 = SongEntry(song_title="Nam tristique", artist_name="Nullam quam", category_name="In ac",
+                                  # date_added="24 Dec 2020", song_length="5 : 30")
+        # self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_29)
 
-        self.frame_36 = SongEntry()
-        self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_36)
+        # self.frame_36 = SongEntry()
+        # self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_36)
 
-        self.frame_176 = SongEntry()
-        self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_176)
+        # self.frame_176 = SongEntry()
+        # self.mainPageLikedSongsSongListQVBoxLayout.addWidget(self.frame_176)
 
         spacerItem11 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageLikedSongsSongListQVBoxLayout.addItem(spacerItem11)
@@ -2176,32 +2176,15 @@ class Ui_MainWindow:
         self.mainPageAuthorsAuthorsGridQGridLayout.setSpacing(24)
         self.mainPageAuthorsAuthorsGridQGridLayout.setObjectName("mainPageAuthorsAuthorsGridQGridLayout")
 
-        self.frame_91 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_91, 0, 0, 1, 1)
-
-        self.frame_92 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_92, 0, 1, 1, 1)
-
-        self.frame_95 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_95, 0, 2, 1, 1)
-
-        self.frame_94 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_94, 0, 3, 1, 1)
+        # self.frame_91 = AuthorEntry(self.mainPageAuthorsGrid)
+        # self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_91, 0, 0, 1, 1)
 
         spacerItem15 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addItem(spacerItem15, 0, 4, 1, 1)
+        self.mainPageAuthorsAuthorsGridQGridLayout.addItem(spacerItem15, 0, 8, 1, 1)
+        # zmienione z 4 na 8
 
-        self.frame_93 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_93, 1, 0, 1, 1)
-
-        self.frame_96 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_96, 1, 1, 1, 1)
-
-        self.frame_97 = AuthorEntry(self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_97, 1, 2, 1, 1)
-
-        self.frame_182 = AdderEntry(adder_type=3 ,parent=self.mainPageAuthorsGrid)
-        self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_182, 1, 3, 1, 1)
+        # self.frame_182 = AdderEntry(adder_type=3 ,parent=self.mainPageAuthorsGrid)
+        # self.mainPageAuthorsAuthorsGridQGridLayout.addWidget(self.frame_182, 1, 3, 1, 1)
 
         spacerItem17 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageAuthorsAuthorsGridQGridLayout.addItem(spacerItem17, 2, 0, 1, 1)
@@ -3409,14 +3392,14 @@ class Ui_MainWindow:
         self.mainPageAuthorPageSongsListQVBoxLayout.setSpacing(0)
         self.mainPageAuthorPageSongsListQVBoxLayout.setObjectName("mainPageAuthorPageSongsListQVBoxLayout")
 
-        self.frame_74 = SongEntry()
-        self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_74)
+        # self.frame_74 = SongEntry()
+        # self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_74)
 
-        self.frame_85 = SongEntry()
-        self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_85)
+        # self.frame_85 = SongEntry()
+        # self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_85)
 
-        self.frame_90 = SongEntry()
-        self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_90)
+        # self.frame_90 = SongEntry()
+        # self.mainPageAuthorPageSongsListQVBoxLayout.addWidget(self.frame_90)
 
         spacerItem24 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageAuthorPageSongsListQVBoxLayout.addItem(spacerItem24)
@@ -4808,14 +4791,8 @@ class Ui_MainWindow:
         self.mainPageAlbumSongsListQVBoxLayout.setSpacing(0)
         self.mainPageAlbumSongsListQVBoxLayout.setObjectName("mainPageAlbumSongsListQVBoxLayout")
 
-        self.frame_269 = SongEntry()
-        self.mainPageAlbumSongsListQVBoxLayout.addWidget(self.frame_269)
-
-        self.frame_275 = SongEntry()
-        self.mainPageAlbumSongsListQVBoxLayout.addWidget(self.frame_275)
-
-        self.frame_281 = SongEntry()
-        self.mainPageAlbumSongsListQVBoxLayout.addWidget(self.frame_281)
+        # self.frame_269 = SongEntry()
+        # self.mainPageAlbumSongsListQVBoxLayout.addWidget(self.frame_269)
 
         spacerItem39 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageAlbumSongsListQVBoxLayout.addItem(spacerItem39)
@@ -5154,32 +5131,16 @@ class Ui_MainWindow:
         self.mainPageAlbumsAlbumsGridQGridLayout.setSpacing(24)
         self.mainPageAlbumsAlbumsGridQGridLayout.setObjectName("mainPageAlbumsAlbumsGridQGridLayout")
 
-        self.frame_266 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_266, 0, 0, 1, 1)
+        # self.frame_266 = AlbumEntry(self.frame_265)
+        # self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_266, 0, 0, 1, 1)
 
-        self.frame_280 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_280, 0, 1, 1, 1)
-
-        self.frame_290 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_290, 0, 2, 1, 1)
-
-        self.frame_391 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_391, 0, 3, 1, 1)
 
         spacerItem41 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.mainPageAlbumsAlbumsGridQGridLayout.addItem(spacerItem41, 0, 4, 1, 1)
 
-        self.frame_393 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_393, 1, 0, 1, 1)
 
-        self.frame_395 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_395, 1, 1, 1, 1)
-
-        self.frame_397 = AlbumEntry(self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_397, 1, 2, 1, 1)
-
-        self.frame_399 = AdderEntry(adder_type=2 ,parent=self.frame_265)
-        self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_399, 1, 3, 1, 1)
+        # self.frame_399 = AdderEntry(adder_type=2 ,parent=self.frame_265)
+        # self.mainPageAlbumsAlbumsGridQGridLayout.addWidget(self.frame_399, 1, 3, 1, 1)
 
         spacerItem43 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.mainPageAlbumsAlbumsGridQGridLayout.addItem(spacerItem43, 2, 0, 1, 1)
@@ -5655,6 +5616,7 @@ class Ui_MainWindow:
         self.verticalLayout_5.setContentsMargins(24, 0, 0, 0)
         self.verticalLayout_5.setSpacing(0)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
+        """
         self.leftMenuPlaylistDummy1 = QtWidgets.QPushButton(self.leftMenuBottomPlaylistsFrame)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -5733,6 +5695,7 @@ class Ui_MainWindow:
         self.leftMenuPlaylistDummy4.setAutoExclusive(False)
         self.leftMenuPlaylistDummy4.setObjectName("leftMenuPlaylistDummy4")
         self.verticalLayout_5.addWidget(self.leftMenuPlaylistDummy4)
+        """
         spacerItem45 = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_5.addItem(spacerItem45)
         self.verticalLayout_3.addWidget(self.leftMenuBottomPlaylistsFrame)
@@ -7297,10 +7260,10 @@ class Ui_MainWindow:
         self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuLastPlayedButton)
         self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuAuthorsButton)
         self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuAlbumsButton)
-        self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy1)
-        self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy2)
-        self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy3)
-        self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy4)
+        # self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy1)
+        # self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy2)
+        # self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy3)
+        # self.mainPageUtilityButtonsQButtonGroup.addButton(self.leftMenuPlaylistDummy4)
 
         self.mainPageCategoriesScroll = QtWidgets.QScrollBar(self.mainPageCategories)
         self.mainPageCategoriesScroll.setOrientation(QtCore.Qt.Vertical)

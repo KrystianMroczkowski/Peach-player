@@ -21,16 +21,19 @@ class User(db.Model):
 class Songs(db.Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(100))
-    author = Column(String(100))
+    author_id = Column(Integer, ForeignKey("authors.id"))
     category_id = Column(Integer, ForeignKey("music_categories.id"))
     album_id = Column(Integer, ForeignKey("albums.id"))
     path = Column(String(300))
     date_added = Column(String)
     length = Column(Integer)
+    liked_by = Column(String)
     user_hashed_name = Column(String(200))
     album = relationship("Albums", back_populates="song")
+    author = relationship("Authors", back_populates="song")
     category = relationship("MusicCategories", back_populates="song")
     playlist = relationship("PlaylistSongs")
+    album_songs = relationship("AlbumSongs")
 
 
 class MusicCategories(db.Model):
@@ -47,6 +50,15 @@ class Albums(db.Model):
     category_id = Column(Integer, ForeignKey("music_categories.id"))
     song = relationship("Songs")
     category = relationship("MusicCategories", back_populates="album")
+    songs = relationship("AlbumSongs")
+
+
+class AlbumSongs(db.Model):
+    id = Column(Integer, primary_key=True)
+    album_id = Column(Integer, ForeignKey("albums.id"))
+    song_id = Column(Integer, ForeignKey("songs.id"))
+    album = relationship("Albums", back_populates="songs")
+    song = relationship("Songs", back_populates="album_songs")
 
 
 class Playlist(db.Model):
@@ -63,6 +75,12 @@ class PlaylistSongs(db.Model):
     song_id = Column(Integer, ForeignKey("songs.id"))
     playlist = relationship("Playlist", back_populates="songs")
     songs = relationship("Songs", back_populates="playlist")
+
+
+class Authors(db.Model):
+    id = Column(Integer, primary_key=True)
+    author_name = Column(String)
+    song = relationship("Songs")
 
 
 db.create_all()
