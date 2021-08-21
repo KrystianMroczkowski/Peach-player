@@ -3,6 +3,8 @@ from app.src import resources_peach_player
 
 
 class PlaylistEntry(QtWidgets.QFrame):
+    clicked = QtCore.Signal()
+
     def __init__(self, parent=None, playlist_name=""):
         super().__init__(parent=parent)
         self.playlist_name = playlist_name
@@ -70,3 +72,7 @@ class PlaylistEntry(QtWidgets.QFrame):
         self.label_37.setObjectName("label_37")
         self.verticalLayout_100.addWidget(self.label_37)
         self.verticalLayout_99.addWidget(self.frame_160)
+
+    def mousePressEvent(self, event):
+        self.clicked.emit()
+        return super(PlaylistEntry, self).mousePressEvent(event)

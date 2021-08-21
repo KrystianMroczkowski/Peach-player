@@ -34,6 +34,7 @@ class Controller:
         self.loaded_selected_author_songs = []
         self.loaded_selected_author_albums = []
         self.loaded_selected_author_playlists = []
+        self.loaded_playlist_page_songs = []
         self.user_data = None
         self.get_user_data()
         self.log_in_with_token()
@@ -59,10 +60,12 @@ class Controller:
         self.ui.pushButton_50.clicked.connect(self.register)
         self.ui.pushButton_53.clicked.connect(self.load_register_page)
         self.ui.fixedNavbar.navbarUsernameButton.clicked.connect(self.log_out)
-        self.ui.mainPageCategorySongsButton.clicked.connect(self.change_widget_songs)
-        self.ui.mainPageCategoryAlbumsButton.clicked.connect(self.change_widget_albums)
-        self.ui.mainPageCategoryPlaylistsButton.clicked.connect(self.change_widget_playlists)
-
+        self.ui.mainPageCategorySongsButton.clicked.connect(self.change_widget_category_songs)
+        self.ui.mainPageCategoryAlbumsButton.clicked.connect(self.change_widget_category_albums)
+        self.ui.mainPageCategoryPlaylistsButton.clicked.connect(self.change_widget_category_playlists)
+        self.ui.mainPageAuthorSongsButton.clicked.connect(self.change_widget_author_songs)
+        self.ui.mainPageAuthorPlaylistsButton.clicked.connect(self.change_widget_author_playlists)
+        self.ui.mainPageAuthorAlbumsButton.clicked.connect(self.change_widget_author_albums)
         # Sort buttons' slots
         self.ui.mainPageLikedSongsSortButtonsQButtonGroup.buttonClicked.connect(
             self.liked_songs_sort_buttons_qbuttongroup_slot)
@@ -884,7 +887,7 @@ class Controller:
         self.ui.set_main_page_stacked_widget_index(9)
 
     def albums_button_slot(self):
-        """Prepare authors page and change mainPageStackedWidget to authors's index"""
+        """Prepare albums page and change mainPageStackedWidget to album's index"""
         self.setup_main_page_albums()
         self.ui.set_main_page_stacked_widget_index(10)
         all_albums = Albums.query.all()
@@ -924,8 +927,8 @@ class Controller:
                 is_liked=is_liked
             )
             self.ui.mainPageAlbumSongsListQVBoxLayout.addWidget(song_frame)
-            # song_frame.pushButton_30.clicked.connect(partial(self.like_song, song.id))
-            # song_frame.mainPageLikedSongsArtistButton.clicked.connect(partial(self.load_artist, song.id))
+            song_frame.pushButton_30.clicked.connect(partial(self.like_song, song.id))
+            song_frame.mainPageLikedSongsArtistButton.clicked.connect(partial(self.load_author_page, song.author))
             self.loaded_album_page_songs.append(song_frame)
 
     def authors_button_slot(self):
@@ -956,6 +959,8 @@ class Controller:
 
     def load_selected_author_data(self, author):
         self.load_selected_author_songs(author)
+        self.load_selected_author_albums(author)
+        self.load_selected_author_playlists(author)
 
     def load_selected_author_songs(self, author):
         if len(self.loaded_selected_author_songs) != 0:
@@ -978,36 +983,42 @@ class Controller:
                                                                         song.category.category_name))
             self.loaded_selected_author_songs.append(song_frame)
 
-    def load_selected_author_albums(self, music_category):
-        if len(self.loaded_albums) != 0:
-            for i in self.loaded_albums:
+    def load_selected_author_albums(self, author):
+        if len(self.loaded_selected_author_albums) != 0:
+            for i in self.loaded_selected_author_albums:
                 i.setParent(None)
-            self.loaded_albums = []
-        albums = Albums.query.filter_by(category=music_category).all()
+            self.loaded_selected_author_albums = []
+        albums = Albums.query.filter_by(author_id=author.id).all()
         row = column = 0
         for album in albums:
             if column % 8 == 0:
                 row += 1
                 column = 0
             album_frame = AlbumEntry(album_name=album.album_name)
-            self.ui.mainPageCategoryAlbumsGridQGridLayout.addWidget(album_frame, row, column, 1, 1)
-            self.loaded_albums.append(album_frame)
+            album_frame.clicked.connect(partial(self.load_album_page, album))
+            self.ui.mainPageAuthorPageAlbumsGridQGridLayout.addWidget(album_frame, row, column, 1, 1)
+            self.loaded_selected_author_albums.append(album_frame)
             column += 1
 
-    def load_selected_author_playlists(self, music_category):
-        if len(self.loaded_playlists) != 0:
-            for i in self.loaded_playlists:
+    def load_selected_author_playlists(self, author):
+        if len(self.loaded_selected_author_playlists) != 0:
+            for i in self.loaded_selected_author_playlists:
                 i.setParent(None)
-            self.loaded_playlists = []
-        playlists = Playlist.query.filter_by(category=music_category).all()
+            self.loaded_selected_author_playlists = []
+        author_playlists = AuthorPlaylists.query.filter_by(author_id=author.id).all()
+        author_playlists_ids = []
+        for i in author_playlists:
+            author_playlists_ids.append(i.playlist_id)
+        playlists = Playlist.query.filter(Playlist.id.in_(author_playlists_ids)).all()
         row = column = 0
         for playlist in playlists:
             if column % 8 == 0:
                 row += 1
                 column = 0
             playlist_frame = PlaylistEntry(self.ui.frame_62, playlist_name=playlist.playlist_name)
-            self.ui.mainPageCategoryPlaylistsGridQGridLayout.addWidget(playlist_frame, row, column, 1, 1)
-            self.loaded_playlists.append(playlist_frame)
+            playlist_frame.clicked.connect(partial(self.load_playlist_page, playlist))
+            self.ui.mainPageAuthorPagePlaylistsGridQGridLayout.addWidget(playlist_frame, row, column, 1, 1)
+            self.loaded_selected_author_playlists.append(playlist_frame)
             column += 1
 
     def last_played_button_slot(self):
@@ -1030,13 +1041,10 @@ class Controller:
             self.ui.mainPageLikedSongsSongListQVBoxLayout.addWidget(liked_song_frame)
             liked_song_frame.pushButton_30.clicked.connect(partial(self.like_song, song.id))
             liked_song_frame.mainPageLikedSongsArtistButton.clicked.connect(
-                partial(self.load_artist, song.author.id))
+                partial(self.load_author_page, song.author))
             liked_song_frame.mainPageLikedSongsCategoryButton.clicked.connect(
                 partial(self.load_selected_category_data, song.category.category_name))
             self.loaded_liked_songs.append(liked_song_frame)
-
-    def load_artist(self, artist_id):
-        print(artist_id)
 
     def categories_button_slot(self):
         """Prepare categories page and change mainPageStackedWidget to categories' index"""
@@ -1104,12 +1112,11 @@ class Controller:
             song_frame = SongEntry(
                 song_title=song.title,
                 artist_name=song.author.author_name,
-                # category_name=song.category.category_name,
                 is_liked=is_liked
             )
             self.ui.mainPageCategoryPageSongsListQVBoxLayout.addWidget(song_frame)
             song_frame.pushButton_30.clicked.connect(partial(self.like_song, song.id))
-            song_frame.mainPageLikedSongsArtistButton.clicked.connect(partial(self.load_artist, song.id))
+            song_frame.mainPageLikedSongsArtistButton.clicked.connect(partial(self.load_author_page, song.author))
             self.loaded_songs.append(song_frame)
 
     def load_albums_data(self, music_category):
@@ -1124,6 +1131,7 @@ class Controller:
                 row += 1
                 column = 0
             album_frame = AlbumEntry(album_name=album.album_name)
+            album_frame.clicked.connect(partial(self.load_album_page, album))
             self.ui.mainPageCategoryAlbumsGridQGridLayout.addWidget(album_frame, row, column, 1, 1)
             self.loaded_albums.append(album_frame)
             column += 1
@@ -1140,6 +1148,7 @@ class Controller:
                 row += 1
                 column = 0
             playlist_frame = PlaylistEntry(self.ui.frame_62, playlist_name=playlist.playlist_name)
+            playlist_frame.clicked.connect(partial(self.load_playlist_page, playlist))
             self.ui.mainPageCategoryPlaylistsGridQGridLayout.addWidget(playlist_frame, row, column, 1, 1)
             self.loaded_playlists.append(playlist_frame)
             column += 1
@@ -1167,11 +1176,43 @@ class Controller:
             playlist_frame.setCheckable(True)
             playlist_frame.setAutoExclusive(False)
             playlist_frame.setObjectName("leftMenuPlaylistDummy1")
+            playlist_frame.clicked.connect(partial(self.load_playlist_page, playlist))
             self.ui.verticalLayout_5.addWidget(playlist_frame)
             self.ui.mainPageUtilityButtonsQButtonGroup.addButton(playlist_frame)
 
+    def load_playlist_page(self, playlist):
+        self.ui.set_main_page_stacked_widget_index(5)
+        self.ui.mainPagePlaylistNameOfPlaylistLabel.setText(playlist.playlist_name)
+        self.load_playlist_page_songs(playlist)
+
+    def load_playlist_page_songs(self, playlist):
+        playlist_songs = PlaylistSongs.query.filter_by(playlist_id=playlist.id).all()
+        playlist_songs_ids = []
+        for i in playlist_songs:
+            playlist_songs_ids.append(i.song_id)
+        if len(self.loaded_playlist_page_songs) != 0:
+            for i in self.loaded_playlist_page_songs:
+                i.setParent(None)
+            self.loaded_playlist_page_songs = []
+        songs = Songs.query.filter(Songs.id.in_(playlist_songs_ids)).all()
+        for song in songs:
+            is_liked = False
+            if song.liked_by == self.user_data["hashed_name"]:
+                is_liked = True
+            song_frame = SongEntry(
+                song_title=song.title,
+                artist_name=song.author.author_name,
+                category_name=song.category.category_name,
+                is_liked=is_liked
+            )
+            self.loaded_playlist_page_songs.append(song_frame)
+            song_frame.pushButton_30.clicked.connect(partial(self.like_song, song.id))
+            song_frame.mainPageLikedSongsArtistButton.clicked.connect(partial(self.load_author_page, song.author))
+            song_frame.mainPageLikedSongsCategoryButton.clicked.connect(partial(self.load_selected_category_data,
+                                                                                song.category.category_name))
+            self.ui.mainPagePlaylistSongListQVBoxLayout.addWidget(song_frame)
+
     def like_song(self, song_id):
-        # Songs.query.filter_by(id=song_id).update({Songs.liked_by: self.user_data["hashed_name"]})
         song_to_like = Songs.query.filter_by(id=song_id).first()
         if song_to_like.liked_by == self.user_data["hashed_name"]:
             song_to_like.liked_by = ""
@@ -1179,14 +1220,23 @@ class Controller:
             song_to_like.liked_by = self.user_data["hashed_name"]
         db.session.commit()
 
-    def change_widget_songs(self):
+    def change_widget_category_songs(self):
         self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(0)
 
-    def change_widget_albums(self):
+    def change_widget_category_albums(self):
         self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(1)
 
-    def change_widget_playlists(self):
+    def change_widget_category_playlists(self):
         self.ui.mainPageCategoryPageStackedWidget.setCurrentIndex(2)
+
+    def change_widget_author_songs(self):
+        self.ui.mainPageAuthorPageStackedWidget.setCurrentIndex(0)
+
+    def change_widget_author_albums(self):
+        self.ui.mainPageAuthorPageStackedWidget.setCurrentIndex(1)
+
+    def change_widget_author_playlists(self):
+        self.ui.mainPageAuthorPageStackedWidget.setCurrentIndex(2)
 
     def add_new_album(self):
         print("ADD NEW ALBUM")

@@ -48,8 +48,10 @@ class Albums(db.Model):
     id = Column(Integer, primary_key=True)
     album_name = Column(String(100))
     category_id = Column(Integer, ForeignKey("music_categories.id"))
+    author_id = Column(Integer, ForeignKey("authors.id"))
     song = relationship("Songs")
     category = relationship("MusicCategories", back_populates="album")
+    author = relationship("Authors", back_populates="album")
     songs = relationship("AlbumSongs")
 
 
@@ -67,6 +69,7 @@ class Playlist(db.Model):
     category_id = Column(Integer, ForeignKey("music_categories.id"))
     category = relationship("MusicCategories", back_populates="playlist")
     songs = relationship("PlaylistSongs")
+    author = relationship("AuthorPlaylists")
 
 
 class PlaylistSongs(db.Model):
@@ -80,7 +83,17 @@ class PlaylistSongs(db.Model):
 class Authors(db.Model):
     id = Column(Integer, primary_key=True)
     author_name = Column(String)
+    album = relationship("Albums")
     song = relationship("Songs")
+    playlists = relationship("AuthorPlaylists")
+
+
+class AuthorPlaylists(db.Model):
+    id = Column(Integer, primary_key=True)
+    author_id = Column(Integer, ForeignKey("authors.id"))
+    playlist_id = Column(Integer, ForeignKey("playlist.id"))
+    author = relationship("Authors", back_populates="playlists")
+    playlist = relationship("Playlist", back_populates="author")
 
 
 db.create_all()
