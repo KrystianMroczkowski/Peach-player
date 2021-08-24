@@ -4906,8 +4906,8 @@ class Ui_MainWindow:
         self.label_197.setObjectName("label_197")
         self.verticalLayout_59.addWidget(self.label_197)
 
-        self.frame_318 = SongEntry()
-        self.verticalLayout_59.addWidget(self.frame_318)
+        # self.frame_318 = SongEntry()
+        # self.verticalLayout_59.addWidget(self.frame_318)
 
         self.verticalLayout_72.addWidget(self.frame_193)
         self.verticalLayout_230.addWidget(self.frame_192)

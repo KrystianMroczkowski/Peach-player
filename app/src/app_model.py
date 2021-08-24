@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
 
@@ -28,6 +28,7 @@ class Songs(db.Model):
     date_added = Column(String)
     length = Column(Integer)
     liked_by = Column(String)
+    is_playing = Column(Boolean)
     user_hashed_name = Column(String(200))
     album = relationship("Albums", back_populates="song")
     author = relationship("Authors", back_populates="song")
@@ -95,5 +96,9 @@ class AuthorPlaylists(db.Model):
     author = relationship("Authors", back_populates="playlists")
     playlist = relationship("Playlist", back_populates="author")
 
+
+class Test(db.Model):
+    id = Column(Integer, primary_key=True)
+    test_bool = Column(Boolean)
 
 db.create_all()
